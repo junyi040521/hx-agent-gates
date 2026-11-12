@@ -1,0 +1,33 @@
+{
+  "name": "gatekit",
+  "version": "0.1.0",
+  "description": "Pre-publish self-consistency audits for npm packages and agent skill packages. Three questions: is the artifact the one it claims to be, does the host read the fields you wrote, will it run on a machine that is not yours.",
+  "keywords": [
+    "audit",
+    "lint",
+    "publish",
+    "npm",
+    "skill",
+    "versions",
+    "engines",
+    "frontmatter"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "bin": {
+    "gatekit": "bin/cli.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.13"
+  },
+  "scripts": {
+    "test": "node --test",
+    "audit": "node bin/cli.js audit"
+  }
+}
