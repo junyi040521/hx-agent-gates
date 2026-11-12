@@ -1,0 +1,72 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: test / node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 18.13 是 `node --test` 进入稳定版的下限；20 是当前 LTS；22 是开发主线
+        node: ['18.20.4', '20', '22']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 三个包均零依赖（不装依赖，直接跑）
+        run: |
+          node -e "
+          const fs=require('fs');
+          for (const p of ['agent-evidence','agent-arbiter','gatekit']) {
+            const j=JSON.parse(fs.readFileSync(p+'/package.json','utf8'));
+            const d=Object.assign({},j.dependencies,j.devDependencies,j.peerDependencies);
+            if (Object.keys(d).length) { console.error(p+' 有依赖，需要换成 npm ci'); process.exit(1); }
+          }
+          console.log('三包零依赖，跳过安装');
+          "
+
+      - name: 三包测试
+        run: node scripts/test-all.js
+
+      - name: 两份 selfgate 必须字节一致
+        run: node check-selfgate-sync.js
+
+      - name: 自审（gatekit 审三包，任何红都算失败）
+        run: node scripts/audit-all.js
+
+  # 版本矩阵只跑一遍就够，但"低于 engines 下限必须装不上"要单独验，
+  # 否则 engines 字段永远只是一句注释。
+  engines-floor:
+    name: engines 下限必须真的拦住
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16.20.2'
+      # 判据必须认「为什么失败」。原来的写法是 `if npm install; then 报错; fi`，
+      # 只要装不上就算通过 —— 网络抖动、registry 5xx 都会让这一步变绿，
+      # 而 engines 可能根本没生效。改成正向断言：输出里必须出现 EBADENGINE。
+      - name: node 16 上 npm 必须因 EBADENGINE 被拒
+        run: |
+          set +e
+          out=$(npm install --no-audit --no-fund --engine-strict 2>&1)
+          rc=$?
+          echo "$out" | tail -20
+          if [ "$rc" -eq 0 ]; then
+            echo "::error::node 16 居然装上了 —— engines 没生效"
+            exit 1
+          fi
+          if ! echo "$out" | grep -qE "EBADENGINE|Unsupported engine"; then
+            echo "::error::装失败了，但不是因为 engines（可能网络或 registry 问题）—— 不能算通过"
+            exit 1
+          fi
+          echo "已正确因 EBADENGINE 被拒"
