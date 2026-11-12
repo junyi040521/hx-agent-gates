@@ -1,0 +1,34 @@
+{
+  "name": "agent-arbiter",
+  "version": "0.1.0",
+  "description": "Behavior-coordination decision orchestrator that can refuse. Picks mode, executors and confidence per turn; defers instead of guessing; every decision replayable and verifiable.",
+  "keywords": [
+    "agent",
+    "orchestrator",
+    "decision",
+    "routing",
+    "defer",
+    "confidence",
+    "llm",
+    "guardrail"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.13"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node demo/run.js",
+    "audit": "node bin/cli.js audit"
+  },
+  "bin": {
+    "arbiter": "bin/cli.js"
+  }
+}
