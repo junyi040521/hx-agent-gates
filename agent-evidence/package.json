@@ -1,0 +1,34 @@
+{
+  "name": "agent-evidence",
+  "version": "0.1.0",
+  "description": "Your agent said done. Prove it. Three-level verdict for every claimed change: landed / effective / useful — with null as a first-class answer.",
+  "keywords": [
+    "agent",
+    "self-modify",
+    "verification",
+    "llm",
+    "evidence",
+    "landed",
+    "effective",
+    "guardrail"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "bin": {
+    "evidence": "bin/cli.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.13"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node demo/run.js",
+    "audit": "node bin/cli.js audit"
+  }
+}
