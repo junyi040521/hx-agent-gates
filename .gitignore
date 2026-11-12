@@ -1,0 +1,24 @@
+# 构建产物
+node_modules/
+dist/
+*.tgz
+
+# 测试与覆盖率
+coverage/
+.nyc_output/
+*.log
+
+# 编辑器与系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 第三方参考包（只作本地狗粮，不入库）
+junyi_x/
+
+# 本地调试脚本
+_dogfood*.py
+_deploy_*.py
+_p_*.py
+ae.tgz

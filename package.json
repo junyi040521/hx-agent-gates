@@ -1,0 +1,24 @@
+{
+  "name": "hx-agent-gates",
+  "version": "0.1.0",
+  "private": true,
+  "description": "三个零依赖的智能体治理闸门：证据链（agent-evidence）、冲突裁决（agent-arbiter）、包结构（gatekit）",
+  "license": "MIT",
+  "workspaces": [
+    "agent-evidence",
+    "agent-arbiter",
+    "gatekit"
+  ],
+  "engines": {
+    "node": ">=18.13"
+  },
+  "scripts": {
+    "test": "node scripts/test-all.js",
+    "test:evidence": "node scripts/test-all.js agent-evidence",
+    "test:arbiter": "node scripts/test-all.js agent-arbiter",
+    "test:gatekit": "node scripts/test-all.js gatekit",
+    "sync": "node check-selfgate-sync.js",
+    "audit": "node scripts/audit-all.js",
+    "check": "node check-selfgate-sync.js && node scripts/test-all.js && node scripts/audit-all.js"
+  }
+}

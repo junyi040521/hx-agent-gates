@@ -1,0 +1,8 @@
+# 全部文本一律 LF。
+# 不加这条：Windows 上 git 默认把 LF 转 CRLF，bin/cli.js 首行会变成 "#!/usr/bin/env node\r"，
+# 在 Linux/macOS 上 shebang 解析失败（\r 被当成解释器名的一部分），
+# 而本地 Windows 一切正常 —— 典型的"只在我机器上没事"。
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.tgz binary
